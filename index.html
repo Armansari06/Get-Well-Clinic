@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Get Well Clinic & Pharmacy | Dr. Iliyas</title>
+
+    <meta name="description"
+          content="Get Well Clinic & Pharmacy, Lucknow. Consult Dr. Iliyas, BAMS General Physician. Call for appointments.">
+
+    <style>
+        /* ===== BASIC RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #064786;
+            --dark-blue: #00366f;
+            --green: #16a34a;
+            --light-green: #eaf9ee;
+            --white: #ffffff;
+            --text: #334155;
+            --light-bg: #f5faf7;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--white);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1150px, 92%);
+            margin: auto;
+        }
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            background: var(--dark-blue);
+            color: white;
+            padding: 9px 0;
+            font-size: 14px;
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.07);
+        }
+
+        .navbar {
+            min-height: 82px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--green), #087a38);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .logo-text h2 {
+            font-size: 24px;
+            color: var(--blue);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            color: var(--green);
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: #64748b;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--green);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 7px;
+            padding: 13px 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #12823c;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--blue);
+            color: var(--blue);
+            background: white;
+        }
+
+        .btn-outline:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--blue);
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 75px 0;
+            background:
+                radial-gradient(circle at 90% 10%, #e0f7e7 0, transparent 30%),
+                linear-gradient(135deg, #f5fbff, #ffffff 60%, #f0fff4);
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 55px;
+        }
+
+        .badge {
+            display: inline-block;
+            color: #12823c;
+            background: #e2f8e9;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            color: var(--blue);
+            font-size: clamp(38px, 5vw, 60px);
+            line-height: 1.12;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 span {
+            color: var(--green);
+        }
+
+        .hero-description {
+            max-width: 580px;
+            color: #64748b;
+            font-size: 17px;
+            margin-bottom: 28px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .hero-feature {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--blue);
+        }
+
+        .hero-feature span {
+            color: var(--green);
+            margin-right: 5px;
+        }
+
+        /* Doctor card */
+        .doctor-card {
+            position: relative;
+            padding: 35px;
+            border-radius: 25px;
+            text-align: center;
+            background: white;
+            box-shadow: 0 20px 60px rgba(6, 71, 134, 0.13);
+            border: 1px solid #e6f2e9;
+        }
+
+        .doctor-avatar {
+            width: 145px;
+            height: 145px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d9fbe4, #c9e8ff);
+            border: 6px solid white;
+            box-shadow: 0 0 0 2px #d7f5df;
+            display: grid;
+            place-items: center;
+            font-size: 76px;
+        }
+
+        .doctor-card h2 {
+            color: var(--blue);
+            font-size: 28px;
+        }
+
+        .doctor-degree {
+            color: var(--green);
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .doctor-speciality {
+            color: #64748b;
+            margin-bottom: 22px;
+        }
+
+        .doctor-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: var(--light-bg);
+            padding: 13px 8px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--blue);
+            font-weight: bold;
+        }
+
+        /* ===== SECTION COMMON ===== */
+        section {
+            padding: 75px 0;
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 45px;
+        }
+
+        .section-heading .small-title {
+            color: var(--green);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .section-heading h2 {
+            color: var(--blue);
+            font-size: clamp(28px, 4vw, 40px);
+            margin: 10px 0;
+        }
+
+        .section-heading p {
+            color: #64748b;
+        }
+
+        /* ===== SERVICES ===== */
+        .services {
+            background: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .service-card {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border: 1px solid #e5eee8;
+            border-radius: 16px;
+            transition: 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-7px);
+            border-color: var(--green);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .service-icon {
+            width: 75px;
+            height: 75px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 18px;
+            background: var(--light-green);
+            border-radius: 50%;
+            font-size: 35px;
+        }
+
+        .service-card h3 {
+            color: var(--blue);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .service-card p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            background: var(--light-bg);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 55px;
+            align-items: center;
+        }
+
+        .about-visual {
+            background: linear-gradient(145deg, #dff8e7, #dceeff);
+            border-radius: 25px;
+            min-height: 340px;
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+
+        .about-visual .medical-symbol {
+            width: 180px;
+            height: 180px;
+            border-radius: 35px;
+            background: white;
+            box-shadow: 0 15px 45px #06478620;
+            display: grid;
+            place-items: center;
+            font-size: 100px;
+            color: var(--green);
+        }
+
+        .about-content h2 {
+            color: var(--blue);
+            font-size: 36px;
+            line-height: 1.2;
+            margin: 12px 0 20px;
+        }
+
+        .about-content p {
+            color: #64748b;
+            margin-bottom: 17px;
+        }
+
+        .check-list {
+            list-style: none;
+            margin: 20px 0 28px;
+        }
+
+        .check-list li {
+            margin: 12px 0;
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .check-list li span {
+            color: var(--green);
+            margin-right: 10px;
+        }
+
+        /* ===== DOCTOR ===== */
+        .doctor-section {
+            background: white;
+        }
+
+        .doctor-profile {
+            max-width: 800px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            padding: 35px;
+            border: 1px solid #e4eee7;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+        }
+
+        .doctor-profile .doctor-avatar {
+            flex-shrink: 0;
+            width: 125px;
+            height: 125px;
+            font-size: 65px;
+        }
+
+        .doctor-profile h3 {
+            color: var(--blue);
+            font-size: 28px;
+        }
+
+        .doctor-profile p {
+            color: #64748b;
+            margin: 8px 0 15px;
+        }
+
+        /* ===== APPOINTMENT ===== */
+        .appointment {
+            background: linear-gradient(135deg, var(--dark-blue), #0860a5);
+            color: white;
+        }
+
+        .appointment-grid {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 55px;
+            align-items: center;
+        }
+
+        .appointment-content h2 {
+            font-size: 38px;
+            line-height: 1.2;
+            margin: 15px 0;
+        }
+
+        .appointment-content p {
+            color: #d9e8f8;
+            margin-bottom: 25px;
+        }
+
+        .appointment-content .contact-number {
+            font-size: 27px;
+            color: white;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .appointment-form {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            color: var(--text);
+        }
+
+        .appointment-form h3 {
+            color: var(--blue);
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--blue);
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dbe4ed;
+            border-radius: 7px;
+            outline: none;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px #16a34a15;
+        }
+
+        .appointment-form .btn {
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .form-note {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 12px;
+        }
+
+        /* ===== CONTACT ===== */
+        .contact {
+            background: var(--light-bg);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 28px 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #e5eee8;
+        }
+
+        .contact-card .contact-icon {
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        .contact-card h3 {
+            color: var(--blue);
+            margin-bottom: 8px;
+        }
+
+        .contact-card p {
+            color: #64748b;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .contact-card a {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #052f5b;
+            color: white;
+            padding: 30px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-content p {
+            font-size: 14px;
+            color: #d6e5f4;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a:hover {
+            color: #75e49a;
+        }
+
+        /* ===== FLOATING WHATSAPP ===== */
+        .whatsapp-float {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #20bd5a;
+            color: white;
+            font-size: 29px;
+            font-weight: bold;
+            box-shadow: 0 5px 20px #0002;
+            z-index: 1001;
+            transition: 0.3s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 950px) {
+            .nav-links {
+                gap: 13px;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+            }
+
+            .nav-appointment {
+                display: none;
+            }
+
+            .hero-grid {
+                gap: 30px;
+            }
+
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .top-bar-content {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .navbar {
+                min-height: 75px;
+            }
+
+            .logo-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 27px;
+            }
+
+            .logo-text h2 {
+                font-size: 20px;
+            }
+
+            .logo-text p {
+                font-size: 9px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 75px;
+                left: 0;
+                width: 100%;
+                padding: 20px 5%;
+                background: white;
+                box-shadow: 0 12px 15px #00000012;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+            }
+
+            .hero {
+                padding: 50px 0;
+            }
+
+            .hero-grid,
+            .about-grid,
+            .appointment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-grid {
+                gap: 40px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .doctor-card {
+                padding: 28px 20px;
+            }
+
+            section {
+                padding: 55px 0;
+            }
+
+            .services-grid {
+                gap: 14px;
+            }
+
+            .service-card {
+                padding: 22px 12px;
+            }
+
+            .service-card h3 {
+                font-size: 16px;
+            }
+
+            .about-grid {
+                gap: 30px;
+            }
+
+            .about-visual {
+                min-height: 260px;
+            }
+
+            .about-content h2 {
+                font-size: 30px;
+            }
+
+            .doctor-profile {
+                flex-direction: column;
+                text-align: center;
+                padding: 25px 18px;
+                gap: 5px;
+            }
+
+            .appointment-grid {
+                gap: 30px;
+            }
+
+            .appointment-content h2 {
+                font-size: 32px;
+            }
+
+            .appointment-form {
+                padding: 22px 18px;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .logo-text h2 {
+                font-size: 17px;
+            }
+
+            .hero h1 {
+                font-size: 35px;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <span>📍 Khurdahi Bazar, Lucknow, Uttar Pradesh</span>
+            <span>📞 <a href="tel:+919161368125">+91 9161368125</a></span>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container navbar">
+
+            <a href="#home" class="logo" aria-label="Get Well Clinic Home">
+                <div class="logo-icon">+</div>
+
+                <div class="logo-text">
+                    <h2>Get Well <span>Clinic</span></h2>
+                    <p>CLINIC & PHARMACY</p>
+                </div>
+            </a>
+
+            <button class="menu-toggle"
+                    id="menuToggle"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false">
+                ☰
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#doctor">Our Doctor</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li>
+                    <a href="#appointment" class="btn btn-primary nav-appointment">
+                        Book Appointment
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </header>
+
+    <main>
+
+        <!-- HERO SECTION -->
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+
+                <div class="hero-content">
+
+                    <span class="badge">
+                        🌿 Welcome to Get Well Clinic & Pharmacy
+                    </span>
+
+                    <h1>
+                        Your Health,<br>
+                        <span>Our Priority.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        Welcome to Get Well Clinic & Pharmacy.
+                        We are here to support your healthcare needs
+                        with general consultations, Ayurvedic treatment
+                        and quality medicines.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="#appointment" class="btn btn-primary">
+                            📅 Book Appointment
+                        </a>
+
+                        <a href="tel:+919161368125" class="btn btn-outline">
+                            📞 Call Now
+                        </a>
+                    </div>
+
+                    <div class="hero-features">
+                        <div class="hero-feature">
+                            <span>✔</span> General Consultation
+                        </div>
+
+                        <div class="hero-feature">
+                            <span>✔</span> Ayurvedic Treatment
+                        </div>
+
+                        <div class="hero-feature">
+                            <span>✔</span> Quality Medicines
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- DOCTOR CARD -->
+                <div class="doctor-card">
+
+                    <div class="doctor-avatar" aria-hidden="true">
+                        👨‍⚕️
+                    </div>
+
+                    <h2>Dr. Iliyas</h2>
+
+                    <p class="doctor-degree">BAMS</p>
+
+                    <p class="doctor-speciality">
+                        General Physician
+                    </p>
+
+                    <div class="doctor-info">
+                        <div class="info-box">
+                            🌿<br>
+                            Ayurvedic Care
+                        </div>
+
+                        <div class="info-box">
+                            🩺<br>
+                            General Consultation
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <a href="#appointment" class="btn btn-primary">
+                        Consult Now
+                    </a>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section class="services" id="services">
+
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="small-title">Our Services</span>
+
+                    <h2>Healthcare You Can Trust</h2>
+
+                    <p>
+                        We aim to make healthcare services accessible
+                        and convenient for you and your family.
+                    </p>
+                </div>
+
+                <div class="services-grid">
+
+                    <div class="service-card">
+                        <div class="service-icon">🩺</div>
+
+                        <h3>General Consultation</h3>
+
+                        <p>
+                            Consult our physician about your health
+                            concerns and general medical needs.
+                        </p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">🌿</div>
+
+                        <h3>Ayurvedic Treatment</h3>
+
+                        <p>
+                            Discuss Ayurvedic healthcare options
+                            with a qualified practitioner.
+                        </p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">💊</div>
+
+                        <h3>Quality Medicines</h3>
+
+                        <p>
+                            Visit our pharmacy for medicines
+                            and guidance on their proper use.
+                        </p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">👨‍👩‍👧‍👦</div>
+
+                        <h3>Healthcare for All</h3>
+
+                        <p>
+                            Healthcare support for individuals
+                            and families in our community.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section class="about" id="about">
+
+            <div class="container about-grid">
+
+                <div class="about-visual">
+                    <div class="medical-symbol">✚</div>
+                </div>
+
+                <div class="about-content">
+
+                    <span class="small-title">About Our Clinic</span>
+
+                    <h2>
+                        Caring for You and Your Family
+                    </h2>
+
+                    <p>
+                        Get Well Clinic & Pharmacy is located at
+                        Khurdahi Bazar, Sultanpur Road, Lucknow.
+                        Our goal is to provide convenient access
+                        to healthcare consultation and pharmacy services.
+                    </p>
+
+                    <p>
+                        Visit us to discuss your health concerns
+                        and learn about suitable care options.
+                    </p>
+
+                    <ul class="check-list">
+                        <li>
+                            <span>✔</span>
+                            General Physician Consultation
+                        </li>
+
+                        <li>
+                            <span>✔</span>
+                            Ayurvedic Healthcare
+                        </li>
+
+                        <li>
+                            <span>✔</span>
+                            Pharmacy Services
+                        </li>
+
+                        <li>
+                            <span>✔</span>
+                            Convenient Clinic Location
+                        </li>
+                    </ul>
+
+                    <a href="#contact" class="btn btn-primary">
+                        Contact Our Clinic
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- DOCTOR SECTION -->
+        <section class="doctor-section" id="doctor">
+
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="small-title">Meet Our Doctor</span>
+
+                    <h2>Your Health Matters</h2>
+
+                    <p>
+                        Learn more about your healthcare provider
+                        and contact the clinic for an appointment.
+                    </p>
+                </div>
+
+                <div class="doctor-profile">
+
+                    <div class="doctor-avatar" aria-hidden="true">
+                        👨‍⚕️
+                    </div>
+
+                    <div>
+                        <h3>Dr. Iliyas</h3>
+
+                        <p>
+                            <strong>BAMS | General Physician</strong>
+                        </p>
+
+                        <p>
+                            Dr. Iliyas provides general physician
+                            consultation and Ayurvedic healthcare.
+                            Contact the clinic for consultation
+                            details and appointment availability.
+                        </p>
+
+                        <a href="#appointment" class="btn btn-primary">
+                            Book a Consultation
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- APPOINTMENT SECTION -->
+        <section class="appointment" id="appointment">
+
+            <div class="container appointment-grid">
+
+                <div class="appointment-content">
+
+                    <span class="badge">
+                        We Are Here to Help
+                    </span>
+
+                    <h2>
+                        Book Your Appointment Today
+                    </h2>
+
+                    <p>
+                        Fill in your details and send an appointment
+                        request through WhatsApp. Our clinic team
+                        can confirm your appointment.
+                    </p>
+
+                    <p>Call us directly for enquiries:</p>
+
+                    <a class="contact-number" href="tel:+919161368125">
+                        📞 +91 9161368125
+                    </a>
+
+                </div>
+
+                <form class="appointment-form" id="appointmentForm">
+
+                    <h3>Request an Appointment</h3>
+
+                    <div class="form-group">
+                        <label for="patientName">Patient Name *</label>
+
+                        <input
+                            type="text"
+                            id="patientName"
+                            name="patientName"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="patientPhone">Mobile Number *</label>
+
+                        <input
+                            type="tel"
+                            id="patientPhone"
+                            name="patientPhone"
+                            placeholder="Enter your mobile number"
+                            autocomplete="tel"
+                            pattern="[0-9+\s()-]{8,20}"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentDate">
+                            Preferred Date *
+                        </label>
+
+                        <input
+                            type="date"
+                            id="appointmentDate"
+                            name="appointmentDate"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serviceType">Select Service *</label>
+
+                        <select id="serviceType" name="serviceType" required>
+                            <option value="">Choose a service</option>
+                            <option value="General Consultation">
+                                General Consultation
+                            </option>
+                            <option value="Ayurvedic Consultation">
+                                Ayurvedic Consultation
+                            </option>
+                            <option value="Pharmacy Enquiry">
+                                Pharmacy Enquiry
+                            </option>
+                            <option value="Other Enquiry">
+                                Other Enquiry
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="patientMessage">
+                            Message (Optional)
+                        </label>
+
+                        <textarea
+                            id="patientMessage"
+                            name="patientMessage"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Write a short message"
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Send Request on WhatsApp
+                    </button>
+
+                    <p class="form-note">
+                        Your request will open WhatsApp for you
+                        to review and send. Appointment confirmation
+                        is subject to clinic availability.
+                    </p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section class="contact" id="contact">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="small-title">Get in Touch</span>
+
+                    <h2>Contact Our Clinic</h2>
+
+                    <p>
+                        Have a question? Contact us or visit
+                        Get Well Clinic & Pharmacy in Lucknow.
+                    </p>
+
+                </div>
+
+                <div class="contact-grid">
+
+                    <div class="contact-card">
+
+                        <div class="contact-icon">📍</div>
+
+                        <h3>Our Address</h3>
+
+                        <p>
+                            Get Well Clinic & Pharmacy<br>
+                            Khurdahi Bazar, Sultanpur Road,<br>
+                            Opp Masjid, Lucknow (U.P.) 226002
+                        </p>
+
+                    </div>
+
+                    <div class="contact-card">
+
+                        <div class="contact-icon">📞</div>
+
+                        <h3>Call Us</h3>
+
+                        <p>
+                            Appointment / Enquiry
+                        </p>
+
+                        <a href="tel:+919161368125">
+                            +91 9161368125
+                        </a>
+
+                    </div>
+
+                    <div class="contact-card">
+
+                        <div class="contact-icon">💬</div>
+
+                        <h3>WhatsApp</h3>
+
+                        <p>
+                            Send us a message for appointment enquiries.
+                        </p>
+
+                        <a
+                            href="https://wa.me/919161368125"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Chat on WhatsApp
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+
+    <a
+        class="btn btn-primary"
+        href="https://maps.app.goo.gl/w5V2YHUdvXeXsKTC8"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        📍 Get Directions to Our Clinic
+    </a>
+
+</div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="container footer-content">
+
+            <div>
+                <h3>Get Well Clinic & Pharmacy</h3>
+
+                <p>
+                    Your Health, Our Priority.
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#contact">Contact</a>
+            </div>
+
+            <p>
+                &copy; <span id="currentYear"></span>
+                Get Well Clinic & Pharmacy.
+            </p>
+
+        </div>
+
+    </footer>
+
+    <!-- FLOATING WHATSAPP BUTTON -->
+    <a
+        href="https://wa.me/919161368125"
+        class="whatsapp-float"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Contact us on WhatsApp"
+        title="Chat on WhatsApp"
+    >
+        ☎
+    </a>
+
+    <!-- JAVASCRIPT -->
+    <script>
+
+        // ===== MOBILE NAVIGATION =====
+
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        menuToggle.addEventListener("click", function () {
+
+            const isOpen = navLinks.classList.toggle("active");
+
+            menuToggle.setAttribute("aria-expanded", isOpen);
+
+            menuToggle.textContent = isOpen ? "✕" : "☰";
+
+        });
+
+        // Close mobile menu when a link is clicked
+
+        document.querySelectorAll("#navLinks a").forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+                navLinks.classList.remove("active");
+
+                menuToggle.setAttribute("aria-expanded", "false");
+
+                menuToggle.textContent = "☰";
+
+            });
+
+        });
+
+
+        // ===== AUTOMATIC COPYRIGHT YEAR =====
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+
+        // ===== PREVENT PAST APPOINTMENT DATES =====
+
+        const appointmentDate = document.getElementById("appointmentDate");
+
+        const today = new Date();
+
+        const localToday = [
+            today.getFullYear(),
+            String(today.getMonth() + 1).padStart(2, "0"),
+            String(today.getDate()).padStart(2, "0")
+        ].join("-");
+
+        appointmentDate.min = localToday;
+
+
+        // ===== WHATSAPP APPOINTMENT FORM =====
+
+        const appointmentForm =
+            document.getElementById("appointmentForm");
+
+        appointmentForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            if (!appointmentForm.reportValidity()) {
+                return;
+            }
+
+            const name =
+                document.getElementById("patientName").value.trim();
+
+            const phone =
+                document.getElementById("patientPhone").value.trim();
+
+            const date =
+                document.getElementById("appointmentDate").value;
+
+            const service =
+                document.getElementById("serviceType").value;
+
+            const message =
+                document.getElementById("patientMessage").value.trim();
+
+            if (!name || !phone || !date || !service) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            const appointmentMessage =
+                "Hello Get Well Clinic & Pharmacy!\n\n" +
+                "I would like to request an appointment.\n\n" +
+                "Patient Name: " + name + "\n" +
+                "Mobile Number: " + phone + "\n" +
+                "Preferred Date: " + date + "\n" +
+                "Service: " + service + "\n" +
+                "Message: " + (message || "Not provided") + "\n\n" +
+                "Please confirm availability. Thank you.";
+
+            const whatsappNumber = "919161368125";
+
+            const whatsappURL =
+                "https://wa.me/" +
+                whatsappNumber +
+                "?text=" +
+                encodeURIComponent(appointmentMessage);
+
+            window.open(whatsappURL, "_blank", "noopener,noreferrer");
+
+        });
+
+    </script>
+
+</body>
+</html>

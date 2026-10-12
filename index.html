@@ -928,6 +928,65 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
+        /* CURRENT OFFERS SECTION */
+
+.current-offers {
+    background: #f0fff4;
+}
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.offer-card {
+    background: #fff;
+    padding: 25px;
+    border: 1px solid #d9efdf;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px #0647860d;
+}
+
+.offer-card h3 {
+    color: #064786;
+    font-size: 21px;
+    margin-bottom: 12px;
+}
+
+.offer-discount {
+    display: inline-block;
+    background: #dcfce7;
+    color: #15803d;
+    font-weight: bold;
+    padding: 7px 12px;
+    border-radius: 7px;
+    margin-bottom: 12px;
+}
+
+.offer-card p {
+    color: #64748b;
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.offer-expiry {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.offers-message {
+    text-align: center;
+    color: #64748b;
+    padding: 20px;
+}
+
+@media (max-width: 720px) {
+    .offers-grid {
+        grid-template-columns: 1fr;
+    }
+}
     </style>
 </head>
 
@@ -982,6 +1041,28 @@
     </header>
 
     <main>
+
+        <!-- CURRENT OFFERS SECTION -->
+
+<section class="current-offers" id="current-offers">
+    <div class="container">
+
+        <div class="section-heading">
+            <span class="small-title">Special Offers</span>
+            <h2>Current Offers</h2>
+            <p>
+                Get Well Clinic & Pharmacy’s latest offers.
+                Check the offer details and validity here.
+            </p>
+        </div>
+
+        <div class="offers-grid" id="publicOffers">
+            <p class="offers-message">Offers load ho rahe hain...</p>
+        </div>
+
+    </div>
+</section>
+
 
         <!-- HERO SECTION -->
 
@@ -1688,6 +1769,131 @@
             window.open(whatsappURL, "_blank", "noopener,noreferrer");
         });
     </script>
+
+    <script type="module">
+    import { initializeApp, getApps, getApp }
+        from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+        getDatabase,
+        ref,
+        onValue
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCvHDTphKAgnL9JwU7gHftpKDdYstPvo3g",
+        authDomain: "get-well-clinic.firebaseapp.com",
+        databaseURL: "https://get-well-clinic-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "get-well-clinic",
+        storageBucket: "get-well-clinic.firebasestorage.app",
+        messagingSenderId: "960079238457",
+        appId: "1:960079238457:web:da4667befe3a46426144e8"
+    };
+
+    const app = getApps().length
+        ? getApp()
+        : initializeApp(firebaseConfig);
+
+    const db = getDatabase(app);
+    const offersContainer = document.getElementById("publicOffers");
+
+    function getToday() {
+        const now = new Date();
+
+        return now.getFullYear() + "-" +
+            String(now.getMonth() + 1).padStart(2, "0") + "-" +
+            String(now.getDate()).padStart(2, "0");
+    }
+
+    function addTextElement(parent, tag, text, className) {
+        const element = document.createElement(tag);
+
+        element.textContent = text;
+
+        if (className) {
+            element.className = className;
+        }
+
+        parent.appendChild(element);
+
+        return element;
+    }
+
+    onValue(
+        ref(db, "offers"),
+        function(snapshot) {
+            offersContainer.replaceChildren();
+
+            const offers = snapshot.val() || {};
+
+            const activeOffers = Object.values(offers).filter(function(offer) {
+                return offer &&
+                    offer.visible === true &&
+                    typeof offer.title === "string" &&
+                    typeof offer.description === "string" &&
+                    typeof offer.expiry === "string" &&
+                    offer.expiry >= getToday();
+            });
+
+            if (activeOffers.length === 0) {
+                offersContainer.className = "offers-grid";
+                addTextElement(
+                    offersContainer,
+                    "p",
+                    "Abhi koi current offer available nahi hai. Naye offers ke liye baad mein visit karein.",
+                    "offers-message"
+                );
+                return;
+            }
+
+            offersContainer.className = "offers-grid";
+
+            activeOffers.sort(function(a, b) {
+                return (b.createdAt || 0) - (a.createdAt || 0);
+            });
+
+            activeOffers.forEach(function(offer) {
+                const card = document.createElement("article");
+                card.className = "offer-card";
+
+                addTextElement(card, "h3", offer.title);
+
+                if (offer.discount) {
+                    addTextElement(
+                        card,
+                        "span",
+                        offer.discount,
+                        "offer-discount"
+                    );
+                }
+
+                addTextElement(card, "p", offer.description);
+
+                addTextElement(
+                    card,
+                    "p",
+                    "Valid until: " + offer.expiry,
+                    "offer-expiry"
+                );
+
+                offersContainer.appendChild(card);
+            });
+        },
+        function(error) {
+            console.error("Offers load error:", error);
+
+            offersContainer.replaceChildren();
+
+            addTextElement(
+                offersContainer,
+                "p",
+                "Offers abhi load nahi ho pa rahe hain. Kripya baad mein try karein.",
+                "offers-message"
+            );
+        }
+    );
+</script>
+
 
 </body>
 </html>

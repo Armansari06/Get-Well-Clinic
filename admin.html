@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Get Well Clinic</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f1f7f3;
+            color: #334155;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            margin: 25px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-radius: 14px;
+            box-shadow: 0 5px 22px #0000000d;
+        }
+
+        h1, h2 {
+            color: #064786;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 6px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button, .button {
+            display: inline-block;
+            padding: 12px 17px;
+            margin-top: 14px;
+            border: 0;
+            border-radius: 7px;
+            background: #16a34a;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button:hover, .button:hover {
+            opacity: 0.9;
+        }
+
+        .secondary {
+            background: #064786;
+        }
+
+        .danger {
+            background: #dc2626;
+        }
+
+        .offer {
+            padding: 18px;
+            margin-top: 15px;
+            border: 1px solid #dbe7df;
+            border-radius: 10px;
+        }
+
+        .offer h3 {
+            margin-top: 0;
+            color: #064786;
+        }
+
+        .status {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .active-status {
+            color: #15803d;
+        }
+
+        .hidden-status {
+            color: #b91c1c;
+        }
+
+        .muted {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .row button {
+            flex: 1;
+        }
+
+        #dashboard {
+            display: none;
+        }
+
+        #loginMessage, #formMessage {
+            margin-top: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="card">
+        <h1>🏥 Get Well Clinic</h1>
+        <p>Current Offers — Admin Panel</p>
+        <p class="muted">
+            Login karke clinic ke offers add, edit, hide aur delete karein.
+        </p>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="card" id="loginPanel">
+        <h2>Admin Login</h2>
+
+        <form id="loginForm">
+            <label for="email">Admin Email</label>
+            <input
+                id="email"
+                type="email"
+                autocomplete="username"
+                required
+                placeholder="Enter your Firebase admin email"
+            >
+
+            <label for="password">Password</label>
+            <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                required
+                placeholder="Enter your password"
+            >
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p id="loginMessage" role="status"></p>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="dashboard">
+
+        <div class="card">
+            <h2>Welcome, Admin!</h2>
+            <p class="muted">
+                Offer save karne par woh website par update hoga.
+            </p>
+
+            <button class="danger" id="logoutButton">
+                Logout
+            </button>
+
+            <a
+                class="button secondary"
+                href="./index.html#current-offers"
+                target="_blank"
+                rel="noopener"
+            >
+                View Website
+            </a>
+        </div>
+
+        <div class="card">
+            <h2 id="formTitle">➕ Add New Offer</h2>
+
+            <form id="offerForm">
+
+                <label for="offerTitle">Offer Title *</label>
+                <input
+                    id="offerTitle"
+                    maxlength="100"
+                    required
+                    placeholder="Example: Health Check-up Offer"
+                >
+
+                <label for="offerDescription">Offer Description *</label>
+                <textarea
+                    id="offerDescription"
+                    rows="4"
+                    maxlength="1000"
+                    required
+                    placeholder="Offer ki details likhein"
+                ></textarea>
+
+                <label for="offerDiscount">Discount / Price (Optional)</label>
+                <input
+                    id="offerDiscount"
+                    maxlength="100"
+                    placeholder="Example: 10% OFF"
+                >
+
+                <label for="offerExpiry">Offer Valid Until *</label>
+                <input id="offerExpiry" type="date" required>
+
+                <label>
+                    <input
+                        id="offerVisible"
+                        type="checkbox"
+                        checked
+                        style="width:auto"
+                    >
+                    Website par offer dikhayein
+                </label>
+
+                <div class="row">
+                    <button type="submit" id="saveButton">
+                        Save Offer
+                    </button>
+
+                    <button
+                        type="button"
+                        class="secondary"
+                        id="cancelEditButton"
+                        style="display:none"
+                    >
+                        Cancel Edit
+                    </button>
+                </div>
+
+                <p id="formMessage" role="status"></p>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>📋 Manage Current Offers</h2>
+            <p class="muted">
+                Hide kiye gaye aur expired offers public website par nahi dikhenge.
+            </p>
+
+            <div id="offersList">Offers load ho rahe hain...</div>
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from
+        "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+        getAuth,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut
+    } from
+        "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+    import {
+        getDatabase,
+        ref,
+        get,
+        push,
+        set,
+        update,
+        remove
+    } from
+        "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCvHDTphKAgnL9JwU7gHftpKDdYstPvo3g",
+        authDomain: "get-well-clinic.firebaseapp.com",
+        databaseURL: "https://get-well-clinic-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "get-well-clinic",
+        storageBucket: "get-well-clinic.firebasestorage.app",
+        messagingSenderId: "960079238457",
+        appId: "1:960079238457:web:da4667befe3a46426144e8"
+    };
+
+    const ADMIN_UID = "bdKIY07TJWThiOGJdDRV2gfnexw2";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const offersRef = ref(db, "offers");
+
+    const loginPanel = document.getElementById("loginPanel");
+    const dashboard = document.getElementById("dashboard");
+    const loginForm = document.getElementById("loginForm");
+    const offerForm = document.getElementById("offerForm");
+    const loginMessage = document.getElementById("loginMessage");
+    const formMessage = document.getElementById("formMessage");
+    const offersList = document.getElementById("offersList");
+
+    let editingId = null;
+    let loadedOffers = {};
+
+    function showError(error) {
+        console.error(error);
+
+        const messages = {
+            "auth/invalid-credential":
+                "Email ya password sahi nahi hai.",
+            "auth/too-many-requests":
+                "Bahut attempts hue. Thodi der baad try karein.",
+            "PERMISSION_DENIED":
+                "Database permission nahi mili. Security Rules check karein."
+        };
+
+        return messages[error.code] ||
+            error.message ||
+            "Kuch galat hua. Dobara try karein.";
+    }
+
+    function isOfferCurrent(offer) {
+        const today = new Date();
+        const todayString =
+            today.getFullYear() + "-" +
+            String(today.getMonth() + 1).padStart(2, "0") + "-" +
+            String(today.getDate()).padStart(2, "0");
+
+        return Boolean(
+            offer.visible &&
+            offer.expiry &&
+            offer.expiry >= todayString
+        );
+    }
+
+    loginForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        loginMessage.textContent = "Logging in...";
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        try {
+            const result = await signInWithEmailAndPassword(
+                auth, email, password
+            );
+
+            if (result.user.uid !== ADMIN_UID) {
+                await signOut(auth);
+                loginMessage.textContent =
+                    "Is account ko Admin permission nahi hai.";
+                return;
+            }
+
+            loginMessage.textContent = "";
+        } catch (error) {
+            loginMessage.textContent = showError(error);
+        }
+    });
+
+    onAuthStateChanged(auth, async function(user) {
+        if (!user) {
+            loginPanel.style.display = "block";
+            dashboard.style.display = "none";
+            return;
+        }
+
+        if (user.uid !== ADMIN_UID) {
+            await signOut(auth);
+            loginMessage.textContent =
+                "Is account ko Admin permission nahi hai.";
+            return;
+        }
+
+        loginPanel.style.display = "none";
+        dashboard.style.display = "block";
+        await loadOffers();
+    });
+
+    document.getElementById("logoutButton").addEventListener(
+        "click", async function() {
+            await signOut(auth);
+        }
+    );
+
+    async function loadOffers() {
+        offersList.textContent = "Offers load ho rahe hain...";
+
+        try {
+            const snapshot = await get(offersRef);
+            loadedOffers = snapshot.val() || {};
+            renderOffers();
+        } catch (error) {
+            offersList.textContent = showError(error);
+        }
+    }
+
+    function renderOffers() {
+        offersList.replaceChildren();
+
+        const entries = Object.entries(loadedOffers);
+
+        if (!entries.length) {
+            offersList.textContent = "Abhi koi offer nahi hai.";
+            return;
+        }
+
+        entries.reverse().forEach(function([id, offer]) {
+            const card = document.createElement("div");
+            card.className = "offer";
+
+            const title = document.createElement("h3");
+            title.textContent = offer.title || "Untitled Offer";
+
+            const description = document.createElement("p");
+            description.textContent = offer.description || "";
+
+            const discount = document.createElement("p");
+            discount.textContent = offer.discount
+                ? "Discount / Price: " + offer.discount
+                : "";
+
+            const expiry = document.createElement("p");
+            expiry.textContent = "Valid until: " + (offer.expiry || "Not set");
+
+            const status = document.createElement("p");
+            status.className = "status " +
+                (isOfferCurrent(offer) ? "active-status" : "hidden-status");
+
+            status.textContent = isOfferCurrent(offer)
+                ? "Visible on website"
+                : "Hidden or expired";
+
+            const buttons = document.createElement("div");
+            buttons.className = "row";
+
+            const editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+            editButton.className = "secondary";
+            editButton.addEventListener("click", function() {
+                startEdit(id, offer);
+            });
+
+            const visibilityButton = document.createElement("button");
+            visibilityButton.textContent = offer.visible
+                ? "Hide Offer"
+                : "Show Offer";
+
+            visibilityButton.addEventListener("click", async function() {
+                try {
+                    await update(ref(db, "offers/" + id), {
+                        visible: !offer.visible
+                    });
+                    await loadOffers();
+                } catch (error) {
+                    alert(showError(error));
+                }
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.className = "danger";
+
+            deleteButton.addEventListener("click", async function() {
+                if (!confirm("Kya aap is offer ko delete karna chahte hain?")) {
+                    return;
+                }
+
+                try {
+                    await remove(ref(db, "offers/" + id));
+                    await loadOffers();
+                } catch (error) {
+                    alert(showError(error));
+                }
+            });
+
+            buttons.append(editButton, visibilityButton, deleteButton);
+            card.append(title, description, discount, expiry, status, buttons);
+            offersList.append(card);
+        });
+    }
+
+    function startEdit(id, offer) {
+        editingId = id;
+
+        document.getElementById("offerTitle").value = offer.title || "";
+        document.getElementById("offerDescription").value =
+            offer.description || "";
+        document.getElementById("offerDiscount").value = offer.discount || "";
+        document.getElementById("offerExpiry").value = offer.expiry || "";
+        document.getElementById("offerVisible").checked = Boolean(offer.visible);
+
+        document.getElementById("formTitle").textContent = "✏️ Edit Offer";
+        document.getElementById("saveButton").textContent = "Update Offer";
+        document.getElementById("cancelEditButton").style.display =
+            "inline-block";
+
+        formMessage.textContent = "";
+        offerForm.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function resetForm() {
+        editingId = null;
+        offerForm.reset();
+
+        document.getElementById("offerVisible").checked = true;
+        document.getElementById("formTitle").textContent = "➕ Add New Offer";
+        document.getElementById("saveButton").textContent = "Save Offer";
+        document.getElementById("cancelEditButton").style.display = "none";
+    }
+
+    document.getElementById("cancelEditButton").addEventListener(
+        "click", resetForm
+    );
+
+    offerForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        formMessage.textContent = "Saving offer...";
+
+        const title = document.getElementById("offerTitle").value.trim();
+        const description =
+            document.getElementById("offerDescription").value.trim();
+        const discount =
+            document.getElementById("offerDiscount").value.trim();
+        const expiry = document.getElementById("offerExpiry").value;
+        const visible = document.getElementById("offerVisible").checked;
+
+        if (!title || !description || !expiry) {
+            formMessage.textContent =
+                "Title, description aur expiry date zaroori hain.";
+            return;
+        }
+
+        if (expiry < new Date().toLocaleDateString("en-CA")) {
+            formMessage.textContent =
+                "Expiry date aaj ya future ki honi chahiye.";
+            return;
+        }
+
+        const offer = {
+            title,
+            description,
+            discount,
+            expiry,
+            visible,
+            updatedAt: Date.now()
+        };
+
+        try {
+            if (editingId) {
+                await update(ref(db, "offers/" + editingId), offer);
+            } else {
+                offer.createdAt = Date.now();
+                const newOfferRef = push(offersRef);
+                await set(newOfferRef, offer);
+            }
+
+            formMessage.textContent = "Offer successfully save ho gaya!";
+            resetForm();
+            await loadOffers();
+        } catch (error) {
+            formMessage.textContent = showError(error);
+        }
+    });
+</script>
+</body>
+</html>

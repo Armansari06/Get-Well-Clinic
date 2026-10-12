@@ -331,6 +331,36 @@
 
     let editingId = null;
     let loadedOffers = {};
+    // Auto logout after 10 minutes of inactivity
+const IDLE_TIMEOUT = 10 * 60 * 1000;
+let idleTimer;
+
+function resetIdleTimer() {
+    clearTimeout(idleTimer);
+
+    if (auth.currentUser) {
+        idleTimer = setTimeout(async function() {
+            try {
+                await signOut(auth);
+                alert("Security ke liye aapko automatically logout kar diya gaya hai.");
+            } catch (error) {
+                console.error("Auto logout error:", error);
+            }
+        }, IDLE_TIMEOUT);
+    }
+}
+
+function stopIdleTimer() {
+    clearTimeout(idleTimer);
+}
+
+// Track user activity
+["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"]
+    .forEach(function(eventName) {
+        document.addEventListener(eventName, resetIdleTimer, {
+            passive: true
+        });
+    });
 
     function showError(error) {
         console.error(error);
@@ -389,10 +419,11 @@
     });
 
     onAuthStateChanged(auth, async function(user) {
-        if (!user) {
-            loginPanel.style.display = "block";
-            dashboard.style.display = "none";
-            return;
+       if (!user) {
+    stopIdleTimer();
+    loginPanel.style.display = "block";
+    dashboard.style.display = "none";
+    return;
         }
 
         if (user.uid !== ADMIN_UID) {
@@ -403,8 +434,11 @@
         }
 
         loginPanel.style.display = "none";
-        dashboard.style.display = "block";
-        await loadOffers();
+dashboard.style.display = "block";
+
+resetIdleTimer();
+
+await loadOffers();
     });
 
     document.getElementById("logoutButton").addEventListener(

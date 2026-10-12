@@ -342,7 +342,7 @@ function resetIdleTimer() {
         idleTimer = setTimeout(async function() {
             try {
                 await signOut(auth);
-                alert("Security ke liye aapko automatically logout kar diya gaya hai.");
+                alert("You have been automatically logged out due to inactivity (idle timeout).");
             } catch (error) {
                 console.error("Auto logout error:", error);
             }

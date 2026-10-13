@@ -46,12 +46,17 @@
             font-weight: bold;
         }
 
-        input, textarea {
+        input:not([type="checkbox"]), textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #cbd5e1;
             border-radius: 7px;
             font: inherit;
+        }
+
+        input:disabled {
+            background: #f1f5f9;
+            cursor: not-allowed;
         }
 
         textarea {
@@ -74,6 +79,11 @@
 
         button:hover, .button:hover {
             opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .secondary {
@@ -128,9 +138,30 @@
             display: none;
         }
 
-        #loginMessage, #formMessage {
+        #loginMessage,
+        #formMessage {
             margin-top: 12px;
             overflow-wrap: anywhere;
+        }
+
+        .error-message {
+            color: #b91c1c;
+            font-weight: bold;
+        }
+
+        .success-message {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .lock-message {
+            padding: 12px;
+            margin-top: 12px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            border-radius: 7px;
+            font-weight: bold;
         }
 
         @media (max-width: 500px) {
@@ -146,22 +177,28 @@
 </head>
 
 <body>
+
 <div class="container">
 
     <div class="card">
         <h1>🏥 Get Well Clinic</h1>
         <p>Current Offers — Admin Panel</p>
+
         <p class="muted">
-           Log in to add, edit, hide, and delete clinic offers.
+            Log in to add, edit, hide, and delete clinic offers.
         </p>
     </div>
 
-    <!-- LOGIN -->
+    <!-- LOGIN PANEL -->
+
     <div class="card" id="loginPanel">
+
         <h2>Admin Login</h2>
 
         <form id="loginForm">
+
             <label for="email">Admin Email</label>
+
             <input
                 id="email"
                 type="email"
@@ -171,6 +208,7 @@
             >
 
             <label for="password">Password</label>
+
             <input
                 id="password"
                 type="password"
@@ -179,19 +217,26 @@
                 placeholder="Enter your password"
             >
 
-            <button type="submit">Login</button>
+            <button type="submit" id="loginButton">
+                Login
+            </button>
+
         </form>
 
-        <p id="loginMessage" role="status"></p>
+        <p id="loginMessage" role="status" aria-live="polite"></p>
+
     </div>
 
     <!-- ADMIN DASHBOARD -->
+
     <div id="dashboard">
 
         <div class="card">
+
             <h2>Welcome, Admin!</h2>
+
             <p class="muted">
-               The offer will be updated on the website once it is saved.
+                The offer will be updated on the website once it is saved.
             </p>
 
             <button class="danger" id="logoutButton">
@@ -206,14 +251,19 @@
             >
                 View Website
             </a>
+
         </div>
 
+        <!-- ADD / EDIT OFFER -->
+
         <div class="card">
+
             <h2 id="formTitle">➕ Add New Offer</h2>
 
             <form id="offerForm">
 
                 <label for="offerTitle">Offer Title *</label>
+
                 <input
                     id="offerTitle"
                     maxlength="100"
@@ -222,6 +272,7 @@
                 >
 
                 <label for="offerDescription">Offer Description *</label>
+
                 <textarea
                     id="offerDescription"
                     rows="4"
@@ -230,7 +281,10 @@
                     placeholder="Enter the offer details."
                 ></textarea>
 
-                <label for="offerDiscount">Discount / Price (Optional)</label>
+                <label for="offerDiscount">
+                    Discount / Price (Optional)
+                </label>
+
                 <input
                     id="offerDiscount"
                     maxlength="100"
@@ -238,7 +292,12 @@
                 >
 
                 <label for="offerExpiry">Offer Valid Until *</label>
-                <input id="offerExpiry" type="date" required>
+
+                <input
+                    id="offerExpiry"
+                    type="date"
+                    required
+                >
 
                 <label>
                     <input
@@ -251,6 +310,7 @@
                 </label>
 
                 <div class="row">
+
                     <button type="submit" id="saveButton">
                         Save Offer
                     </button>
@@ -263,25 +323,42 @@
                     >
                         Cancel Edit
                     </button>
+
                 </div>
 
-                <p id="formMessage" role="status"></p>
+                <p
+                    id="formMessage"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+
             </form>
+
         </div>
 
+        <!-- MANAGE OFFERS -->
+
         <div class="card">
+
             <h2>📋 Manage Current Offers</h2>
+
             <p class="muted">
-                Hidden and expired offers will not be displayed on the public website.
+                Hidden and expired offers will not be displayed
+                on the public website.
             </p>
 
-            <div id="offersList">Offers load ho rahe hain...</div>
+            <div id="offersList" aria-live="polite">
+                Offers load ho rahe hain...
+            </div>
+
         </div>
 
     </div>
+
 </div>
 
 <script type="module">
+
     import { initializeApp } from
         "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
 
@@ -304,6 +381,11 @@
     } from
         "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
+
+    // =====================================
+    // FIREBASE CONFIGURATION
+    // =====================================
+
     const firebaseConfig = {
         apiKey: "AIzaSyCvHDTphKAgnL9JwU7gHftpKDdYstPvo3g",
         authDomain: "get-well-clinic.firebaseapp.com",
@@ -314,105 +396,396 @@
         appId: "1:960079238457:web:da4667befe3a46426144e8"
     };
 
-    const ADMIN_UID = "bdKIY07TJWThiOGJdDRV2gfnexw2";
+    // Only this Firebase UID can access the dashboard.
+    const ADMIN_UIDS = [ "bdKIY07TJWThiOGJdDRV2gfnexw2", "elKMZQJ1aoOAI3gFdVKy7xHM6Ff2" ];
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+
     const offersRef = ref(db, "offers");
+
+
+    // =====================================
+    // HTML ELEMENTS
+    // =====================================
 
     const loginPanel = document.getElementById("loginPanel");
     const dashboard = document.getElementById("dashboard");
+
     const loginForm = document.getElementById("loginForm");
     const offerForm = document.getElementById("offerForm");
+
     const loginMessage = document.getElementById("loginMessage");
     const formMessage = document.getElementById("formMessage");
+
     const offersList = document.getElementById("offersList");
 
-    let editingId = null;
-    let loadedOffers = {};
-    // Auto logout after 10 minutes of inactivity
-const IDLE_TIMEOUT = 10 * 60 * 1000;
-let idleTimer;
-// Login attempt protection
-const MAX_ATTEMPTS = 5;
-const LOCK_TIME = 5 * 60 * 1000; // 5 minutes
+    const loginButton = document.getElementById("loginButton");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
 
-let failedAttempts = 0;
-let lockUntil = 0;
 
-function isLoginLocked() {
-    if (Date.now() < lockUntil) {
-        const remaining = Math.ceil(
-            (lockUntil - Date.now()) / 1000
+    // =====================================
+    // EMAIL-WISE LOGIN PROTECTION
+    // =====================================
+
+    const MAX_ATTEMPTS = 5;
+    const LOCK_TIME = 10 * 60 * 1000;
+
+    const ATTEMPTS_KEY = "gw_admin_attempts_by_email";
+    const LOCKS_KEY = "gw_admin_locks_by_email";
+
+    let attemptsByEmail = {};
+    let locksByEmail = {};
+
+    let countdownInterval = null;
+    let loginInProgress = false;
+    let currentLoginEmail = "";
+
+    function normalizeEmail(email) {
+        return email.trim().toLowerCase();
+    }
+
+    function loadLoginProtection() {
+        try {
+            attemptsByEmail = JSON.parse(
+                sessionStorage.getItem(ATTEMPTS_KEY) || "{}"
+            );
+
+            locksByEmail = JSON.parse(
+                sessionStorage.getItem(LOCKS_KEY) || "{}"
+            );
+
+            if (
+                !attemptsByEmail ||
+                typeof attemptsByEmail !== "object" ||
+                Array.isArray(attemptsByEmail)
+            ) {
+                attemptsByEmail = {};
+            }
+
+            if (
+                !locksByEmail ||
+                typeof locksByEmail !== "object" ||
+                Array.isArray(locksByEmail)
+            ) {
+                locksByEmail = {};
+            }
+        } catch (error) {
+            attemptsByEmail = {};
+            locksByEmail = {};
+        }
+    }
+
+    function saveLoginProtection() {
+        try {
+            sessionStorage.setItem(
+                ATTEMPTS_KEY,
+                JSON.stringify(attemptsByEmail)
+            );
+
+            sessionStorage.setItem(
+                LOCKS_KEY,
+                JSON.stringify(locksByEmail)
+            );
+        } catch (error) {
+            console.warn("Unable to save login protection.", error);
+        }
+    }
+
+    function stopCountdown() {
+        if (countdownInterval !== null) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+    }
+
+    function updateLoginButton() {
+        const email = normalizeEmail(emailInput.value);
+        const lockedUntil = locksByEmail[email] || 0;
+
+        const locked = Boolean(
+            email && Date.now() < lockedUntil
         );
 
+        emailInput.disabled = loginInProgress;
+
+        passwordInput.disabled =
+            loginInProgress || locked;
+
+        loginButton.disabled =
+            loginInProgress || locked;
+    }
+
+    function startCountdown(email) {
+        stopCountdown();
+
+        currentLoginEmail = email;
+
+        function tick() {
+            const lockedUntil = locksByEmail[email] || 0;
+            const remainingMs = lockedUntil - Date.now();
+
+            // Stop displaying a countdown for another email.
+            if (normalizeEmail(emailInput.value) !== email) {
+                stopCountdown();
+                updateLoginButton();
+                return;
+            }
+
+            if (remainingMs <= 0) {
+                delete locksByEmail[email];
+                delete attemptsByEmail[email];
+
+                saveLoginProtection();
+                stopCountdown();
+
+                loginMessage.className = "success-message";
+                loginMessage.textContent =
+                    "Is email ka login unlock ho gaya hai. Ab dobara try karein.";
+
+                updateLoginButton();
+                return;
+            }
+
+            const totalSeconds = Math.ceil(remainingMs / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+
+            loginMessage.className = "lock-message";
+
+            loginMessage.textContent =
+                "Is email par login temporarily locked hai. " +
+                minutes + " minute " + seconds +
+                " second baad dobara try karein.";
+
+            updateLoginButton();
+        }
+
+        tick();
+
+        if ((locksByEmail[email] || 0) > Date.now()) {
+            countdownInterval = setInterval(tick, 1000);
+        }
+    }
+
+    function isLoginLocked(email) {
+        email = normalizeEmail(email);
+
+        if (!email) {
+            return false;
+        }
+
+        const lockedUntil = locksByEmail[email] || 0;
+
+        if (Date.now() < lockedUntil) {
+            startCountdown(email);
+            return true;
+        }
+
+        if (lockedUntil !== 0) {
+            delete locksByEmail[email];
+            delete attemptsByEmail[email];
+
+            saveLoginProtection();
+        }
+
+        updateLoginButton();
+
+        return false;
+    }
+
+    function recordFailedAttempt(email) {
+        email = normalizeEmail(email);
+
+        if (!email) {
+            return;
+        }
+
+        attemptsByEmail[email] =
+            (attemptsByEmail[email] || 0) + 1;
+
+        const attempts = attemptsByEmail[email];
+
+        saveLoginProtection();
+
+        if (attempts >= MAX_ATTEMPTS) {
+            locksByEmail[email] = Date.now() + LOCK_TIME;
+
+            saveLoginProtection();
+            startCountdown(email);
+
+            return;
+        }
+
+        const attemptsLeft = MAX_ATTEMPTS - attempts;
+
+        loginMessage.className = "error-message";
+
         loginMessage.textContent =
-            `Login locked. ${remaining} seconds baad try karein.`;
+            "Email ya password galat hai. Is email ke " +
+            attemptsLeft + " attempts baaki hain.";
 
-        return true;
+        updateLoginButton();
     }
 
-    if (lockUntil !== 0) {
-        lockUntil = 0;
-        failedAttempts = 0;
+    function clearLoginProtection(email) {
+        email = normalizeEmail(email);
+
+        delete attemptsByEmail[email];
+        delete locksByEmail[email];
+
+        saveLoginProtection();
+
+        if (currentLoginEmail === email) {
+            stopCountdown();
+            currentLoginEmail = "";
+        }
+
+        updateLoginButton();
     }
 
-    return false;
-}
+    loadLoginProtection();
+
+    // Update lock status whenever the email changes.
+    emailInput.addEventListener("input", function() {
+        const email = normalizeEmail(emailInput.value);
+
+        if (
+            currentLoginEmail &&
+            currentLoginEmail !== email
+        ) {
+            stopCountdown();
+            currentLoginEmail = "";
+        }
+
+        updateLoginButton();
+
+        if (email && Date.now() < (locksByEmail[email] || 0)) {
+            startCountdown(email);
+        } else if (email) {
+            loginMessage.className = "";
+            loginMessage.textContent = "";
+        }
+    });
 
 
+    // =====================================
+    // AUTO LOGOUT AFTER 10 MINUTES IDLE
+    // =====================================
 
-function resetIdleTimer() {
-    clearTimeout(idleTimer);
+    const IDLE_TIMEOUT = 10 * 60 * 1000;
 
-    if (auth.currentUser) {
+    let idleTimer = null;
+
+    function stopIdleTimer() {
+        if (idleTimer !== null) {
+            clearTimeout(idleTimer);
+            idleTimer = null;
+        }
+    }
+
+    function resetIdleTimer() {
+        stopIdleTimer();
+
+        if (!auth.currentUser) {
+            return;
+        }
+
         idleTimer = setTimeout(async function() {
             try {
-                await signOut(auth);
-                alert("You have been automatically logged out due to inactivity (idle timeout).");
+                if (auth.currentUser) {
+                    await signOut(auth);
+
+                    emailInput.value = "";
+                    passwordInput.value = "";
+
+                    loginMessage.textContent = "";
+                    loginMessage.className = "";
+
+                    resetForm();
+
+                    alert(
+                        "You have been automatically logged out " +
+                        "due to 10 minutes of inactivity."
+                    );
+                }
             } catch (error) {
                 console.error("Auto logout error:", error);
             }
         }, IDLE_TIMEOUT);
     }
-}
 
-function stopIdleTimer() {
-    clearTimeout(idleTimer);
-}
+    const activityEvents = [
+        "mousemove",
+        "mousedown",
+        "keydown",
+        "scroll",
+        "touchstart",
+        "click"
+    ];
 
-// Track user activity
-["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"]
-    .forEach(function(eventName) {
-        document.addEventListener(eventName, resetIdleTimer, {
-            passive: true
-        });
+    activityEvents.forEach(function(eventName) {
+        document.addEventListener(
+            eventName,
+            resetIdleTimer,
+            { passive: true }
+        );
     });
+
+
+    // =====================================
+    // ERROR HANDLING
+    // =====================================
 
     function showError(error) {
         console.error(error);
 
         const messages = {
             "auth/invalid-credential":
-                "The email or password is incorrect.",
+                "Email ya password galat hai.",
+
+            "auth/invalid-email":
+                "Please enter a valid email address.",
+
             "auth/too-many-requests":
-                "Too many attempts. Please try again later.",
+                "Firebase ne temporarily login requests block ki hain. Baad mein try karein.",
+
+            "auth/network-request-failed":
+                "Network error. Please check your internet connection.",
+
             "PERMISSION_DENIED":
-                "Database permission denied. Please check the security rules."
+                "Database permission denied. Firebase security rules check karein."
         };
 
         return messages[error.code] ||
-            error.message ||
             "Something went wrong. Please try again.";
     }
 
-    function isOfferCurrent(offer) {
+
+    // =====================================
+    // CHECK OFFER EXPIRY
+    // =====================================
+
+    function getLocalDateString() {
         const today = new Date();
-        const todayString =
-            today.getFullYear() + "-" +
-            String(today.getMonth() + 1).padStart(2, "0") + "-" +
-            String(today.getDate()).padStart(2, "0");
+
+        const year = today.getFullYear();
+
+        const month = String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+        const day = String(
+            today.getDate()
+        ).padStart(2, "0");
+
+        return year + "-" + month + "-" + day;
+    }
+
+    function isOfferCurrent(offer) {
+        const todayString = getLocalDateString();
 
         return Boolean(
             offer.visible &&
@@ -421,75 +794,176 @@ function stopIdleTimer() {
         );
     }
 
-    loginForm.addEventListener("submit", async function(event) {
-        if (isLoginLocked()) {
-    event.preventDefault();
-    return;
-}
-        event.preventDefault();
-        loginMessage.textContent = "Logging in...";
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
+    // =====================================
+    // ADMIN LOGIN
+    // =====================================
+
+    loginForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        if (loginInProgress) {
+            return;
+        }
+
+        const email = normalizeEmail(emailInput.value);
+        const password = passwordInput.value;
+
+        if (isLoginLocked(email)) {
+            return;
+        }
+
+        loginInProgress = true;
+        updateLoginButton();
+
+        loginMessage.className = "";
+        loginMessage.textContent = "Logging in...";
 
         try {
             const result = await signInWithEmailAndPassword(
-                auth, email, password
+                auth,
+                email,
+                password
             );
 
+            // Only the specified Firebase UID is an admin.
             if (result.user.uid !== ADMIN_UID) {
                 await signOut(auth);
+
+                loginMessage.className = "error-message";
                 loginMessage.textContent =
                     "Is account ko Admin permission nahi hai.";
+
                 return;
             }
 
+            // Reset attempts only for this email.
+            clearLoginProtection(email);
+
+            loginMessage.className = "";
             loginMessage.textContent = "";
+
+            passwordInput.value = "";
+
         } catch (error) {
-            loginMessage.textContent = showError(error);
+            if (
+                error.code === "auth/invalid-credential" ||
+                error.code === "auth/wrong-password" ||
+                error.code === "auth/user-not-found" ||
+                error.code === "auth/invalid-login-credentials"
+            ) {
+                recordFailedAttempt(email);
+            } else {
+                loginMessage.className = "error-message";
+                loginMessage.textContent = showError(error);
+            }
+        } finally {
+            loginInProgress = false;
+            updateLoginButton();
+
+            if (
+                email === normalizeEmail(emailInput.value) &&
+                Date.now() < (locksByEmail[email] || 0)
+            ) {
+                startCountdown(email);
+            }
         }
     });
 
+
+    // =====================================
+    // AUTH STATE
+    // =====================================
+
     onAuthStateChanged(auth, async function(user) {
-       if (!user) {
-    stopIdleTimer();
-    loginPanel.style.display = "block";
-    dashboard.style.display = "none";
-    return;
+        if (!user) {
+            stopIdleTimer();
+
+            loginPanel.style.display = "block";
+            dashboard.style.display = "none";
+
+            emailInput.value = "";
+            passwordInput.value = "";
+
+            updateLoginButton();
+
+            return;
         }
 
-        if (user.uid !== ADMIN_UID) {
+        if (!ADMIN_UIDS.includes(user.uid)) {
             await signOut(auth);
+
+            loginPanel.style.display = "block";
+            dashboard.style.display = "none";
+
+            emailInput.value = "";
+            passwordInput.value = "";
+
+            loginMessage.className = "error-message";
             loginMessage.textContent =
                 "Is account ko Admin permission nahi hai.";
+
             return;
         }
 
         loginPanel.style.display = "none";
-dashboard.style.display = "block";
+        dashboard.style.display = "block";
 
-resetIdleTimer();
+        resetIdleTimer();
 
-await loadOffers();
+        await loadOffers();
     });
 
-    document.getElementById("logoutButton").addEventListener(
-        "click", async function() {
-            await signOut(auth);
-        }
-    );
+
+    // =====================================
+    // MANUAL LOGOUT
+    // =====================================
+
+    document.getElementById("logoutButton")
+        .addEventListener("click", async function() {
+            try {
+                await signOut(auth);
+
+                stopIdleTimer();
+                resetForm();
+
+                emailInput.value = "";
+                passwordInput.value = "";
+
+                loginMessage.className = "";
+                loginMessage.textContent = "";
+
+            } catch (error) {
+                alert(showError(error));
+            }
+        });
+
+
+    // =====================================
+    // LOAD OFFERS
+    // =====================================
+
+    let editingId = null;
+    let loadedOffers = {};
 
     async function loadOffers() {
         offersList.textContent = "Offers load ho rahe hain...";
 
         try {
             const snapshot = await get(offersRef);
+
             loadedOffers = snapshot.val() || {};
+
             renderOffers();
         } catch (error) {
             offersList.textContent = showError(error);
         }
     }
+
+
+    // =====================================
+    // DISPLAY OFFERS
+    // =====================================
 
     function renderOffers() {
         offersList.replaceChildren();
@@ -517,11 +991,16 @@ await loadOffers();
                 : "";
 
             const expiry = document.createElement("p");
-            expiry.textContent = "Valid until: " + (offer.expiry || "Not set");
+            expiry.textContent =
+                "Valid until: " + (offer.expiry || "Not set");
 
             const status = document.createElement("p");
             status.className = "status " +
-                (isOfferCurrent(offer) ? "active-status" : "hidden-status");
+                (
+                    isOfferCurrent(offer)
+                        ? "active-status"
+                        : "hidden-status"
+                );
 
             status.textContent = isOfferCurrent(offer)
                 ? "Visible on website"
@@ -530,12 +1009,17 @@ await loadOffers();
             const buttons = document.createElement("div");
             buttons.className = "row";
 
+            // EDIT
+
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
             editButton.className = "secondary";
+
             editButton.addEventListener("click", function() {
                 startEdit(id, offer);
             });
+
+            // SHOW / HIDE
 
             const visibilityButton = document.createElement("button");
             visibilityButton.textContent = offer.visible
@@ -547,11 +1031,14 @@ await loadOffers();
                     await update(ref(db, "offers/" + id), {
                         visible: !offer.visible
                     });
+
                     await loadOffers();
                 } catch (error) {
                     alert(showError(error));
                 }
             });
+
+            // DELETE
 
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
@@ -564,100 +1051,197 @@ await loadOffers();
 
                 try {
                     await remove(ref(db, "offers/" + id));
+
+                    if (editingId === id) {
+                        resetForm();
+                    }
+
                     await loadOffers();
                 } catch (error) {
                     alert(showError(error));
                 }
             });
 
-            buttons.append(editButton, visibilityButton, deleteButton);
-            card.append(title, description, discount, expiry, status, buttons);
+            buttons.append(
+                editButton,
+                visibilityButton,
+                deleteButton
+            );
+
+            card.append(
+                title,
+                description,
+                discount,
+                expiry,
+                status,
+                buttons
+            );
+
             offersList.append(card);
         });
     }
 
+
+    // =====================================
+    // EDIT OFFER
+    // =====================================
+
     function startEdit(id, offer) {
         editingId = id;
 
-        document.getElementById("offerTitle").value = offer.title || "";
+        document.getElementById("offerTitle").value =
+            offer.title || "";
+
         document.getElementById("offerDescription").value =
             offer.description || "";
-        document.getElementById("offerDiscount").value = offer.discount || "";
-        document.getElementById("offerExpiry").value = offer.expiry || "";
-        document.getElementById("offerVisible").checked = Boolean(offer.visible);
 
-        document.getElementById("formTitle").textContent = "✏️ Edit Offer";
-        document.getElementById("saveButton").textContent = "Update Offer";
+        document.getElementById("offerDiscount").value =
+            offer.discount || "";
+
+        document.getElementById("offerExpiry").value =
+            offer.expiry || "";
+
+        document.getElementById("offerVisible").checked =
+            Boolean(offer.visible);
+
+        document.getElementById("formTitle").textContent =
+            "✏️ Edit Offer";
+
+        document.getElementById("saveButton").textContent =
+            "Update Offer";
+
         document.getElementById("cancelEditButton").style.display =
             "inline-block";
 
         formMessage.textContent = "";
-        offerForm.scrollIntoView({ behavior: "smooth" });
+        formMessage.className = "";
+
+        offerForm.scrollIntoView({
+            behavior: "smooth"
+        });
     }
+
+
+    // =====================================
+    // RESET OFFER FORM
+    // =====================================
 
     function resetForm() {
         editingId = null;
+
         offerForm.reset();
 
         document.getElementById("offerVisible").checked = true;
-        document.getElementById("formTitle").textContent = "➕ Add New Offer";
-        document.getElementById("saveButton").textContent = "Save Offer";
-        document.getElementById("cancelEditButton").style.display = "none";
+
+        document.getElementById("formTitle").textContent =
+            "➕ Add New Offer";
+
+        document.getElementById("saveButton").textContent =
+            "Save Offer";
+
+        document.getElementById("cancelEditButton").style.display =
+            "none";
+
+        formMessage.textContent = "";
+        formMessage.className = "";
     }
 
-    document.getElementById("cancelEditButton").addEventListener(
-        "click", resetForm
-    );
+    document.getElementById("cancelEditButton")
+        .addEventListener("click", resetForm);
+
+
+    // =====================================
+    // SAVE / UPDATE OFFER
+    // =====================================
 
     offerForm.addEventListener("submit", async function(event) {
         event.preventDefault();
+
+        formMessage.className = "";
         formMessage.textContent = "Saving offer...";
 
-        const title = document.getElementById("offerTitle").value.trim();
-        const description =
-            document.getElementById("offerDescription").value.trim();
-        const discount =
-            document.getElementById("offerDiscount").value.trim();
+        const title = document.getElementById("offerTitle")
+            .value.trim();
+
+        const description = document.getElementById("offerDescription")
+            .value.trim();
+
+        const discount = document.getElementById("offerDiscount")
+            .value.trim();
+
         const expiry = document.getElementById("offerExpiry").value;
+
         const visible = document.getElementById("offerVisible").checked;
 
         if (!title || !description || !expiry) {
+            formMessage.className = "error-message";
             formMessage.textContent =
                 "Title, description aur expiry date zaroori hain.";
             return;
         }
 
-        if (expiry < new Date().toLocaleDateString("en-CA")) {
+        if (expiry < getLocalDateString()) {
+            formMessage.className = "error-message";
             formMessage.textContent =
                 "Expiry date aaj ya future ki honi chahiye.";
             return;
         }
 
         const offer = {
-            title,
-            description,
-            discount,
-            expiry,
-            visible,
+            title: title,
+            description: description,
+            discount: discount,
+            expiry: expiry,
+            visible: visible,
             updatedAt: Date.now()
         };
 
+        const saveButton = document.getElementById("saveButton");
+        saveButton.disabled = true;
+
         try {
             if (editingId) {
-                await update(ref(db, "offers/" + editingId), offer);
+                await update(
+                    ref(db, "offers/" + editingId),
+                    offer
+                );
             } else {
                 offer.createdAt = Date.now();
+
                 const newOfferRef = push(offersRef);
+
                 await set(newOfferRef, offer);
             }
 
-            formMessage.textContent = "Offer saved successfully!";
             resetForm();
+
+            formMessage.className = "success-message";
+            formMessage.textContent = "Offer saved successfully!";
+
             await loadOffers();
+
         } catch (error) {
+            formMessage.className = "error-message";
             formMessage.textContent = showError(error);
+        } finally {
+            saveButton.disabled = false;
         }
     });
+
+
+    // =====================================
+    // INITIAL LOGIN LOCK CHECK
+    // =====================================
+
+    const initialEmail = normalizeEmail(emailInput.value);
+
+    if (initialEmail && isLoginLocked(initialEmail)) {
+        startCountdown(initialEmail);
+    } else {
+        updateLoginButton();
+    }
+
 </script>
+
 </body>
 </html>

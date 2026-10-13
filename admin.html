@@ -152,7 +152,7 @@
         <h1>🏥 Get Well Clinic</h1>
         <p>Current Offers — Admin Panel</p>
         <p class="muted">
-            Login karke clinic ke offers add, edit, hide aur delete karein.
+           Log in to add, edit, hide, and delete clinic offers.
         </p>
     </div>
 
@@ -191,7 +191,7 @@
         <div class="card">
             <h2>Welcome, Admin!</h2>
             <p class="muted">
-                Offer save karne par woh website par update hoga.
+               The offer will be updated on the website once it is saved.
             </p>
 
             <button class="danger" id="logoutButton">
@@ -227,7 +227,7 @@
                     rows="4"
                     maxlength="1000"
                     required
-                    placeholder="Offer ki details likhein"
+                    placeholder="Enter the offer details."
                 ></textarea>
 
                 <label for="offerDiscount">Discount / Price (Optional)</label>
@@ -247,7 +247,7 @@
                         checked
                         style="width:auto"
                     >
-                    Website par offer dikhayein
+                    Display offer on website.
                 </label>
 
                 <div class="row">
@@ -272,7 +272,7 @@
         <div class="card">
             <h2>📋 Manage Current Offers</h2>
             <p class="muted">
-                Hide kiye gaye aur expired offers public website par nahi dikhenge.
+                Hidden and expired offers will not be displayed on the public website.
             </p>
 
             <div id="offersList">Offers load ho rahe hain...</div>
@@ -334,6 +334,34 @@
     // Auto logout after 10 minutes of inactivity
 const IDLE_TIMEOUT = 10 * 60 * 1000;
 let idleTimer;
+// Login attempt protection
+const MAX_ATTEMPTS = 5;
+const LOCK_TIME = 5 * 60 * 1000; // 5 minutes
+
+let failedAttempts = 0;
+let lockUntil = 0;
+
+function isLoginLocked() {
+    if (Date.now() < lockUntil) {
+        const remaining = Math.ceil(
+            (lockUntil - Date.now()) / 1000
+        );
+
+        loginMessage.textContent =
+            `Login locked. ${remaining} seconds baad try karein.`;
+
+        return true;
+    }
+
+    if (lockUntil !== 0) {
+        lockUntil = 0;
+        failedAttempts = 0;
+    }
+
+    return false;
+}
+
+
 
 function resetIdleTimer() {
     clearTimeout(idleTimer);
@@ -367,16 +395,16 @@ function stopIdleTimer() {
 
         const messages = {
             "auth/invalid-credential":
-                "Email ya password sahi nahi hai.",
+                "The email or password is incorrect.",
             "auth/too-many-requests":
-                "Bahut attempts hue. Thodi der baad try karein.",
+                "Too many attempts. Please try again later.",
             "PERMISSION_DENIED":
-                "Database permission nahi mili. Security Rules check karein."
+                "Database permission denied. Please check the security rules."
         };
 
         return messages[error.code] ||
             error.message ||
-            "Kuch galat hua. Dobara try karein.";
+            "Something went wrong. Please try again.";
     }
 
     function isOfferCurrent(offer) {
@@ -394,6 +422,10 @@ function stopIdleTimer() {
     }
 
     loginForm.addEventListener("submit", async function(event) {
+        if (isLoginLocked()) {
+    event.preventDefault();
+    return;
+}
         event.preventDefault();
         loginMessage.textContent = "Logging in...";
 
@@ -619,7 +651,7 @@ await loadOffers();
                 await set(newOfferRef, offer);
             }
 
-            formMessage.textContent = "Offer successfully save ho gaya!";
+            formMessage.textContent = "Offer saved successfully!";
             resetForm();
             await loadOffers();
         } catch (error) {
